@@ -28,3 +28,6 @@ std/wasi/testdata/snapshot_preview1/
 # MacOS generated files
 .DS_Store
 .DS_Store?
+
+#deno
+.deno_plugins
