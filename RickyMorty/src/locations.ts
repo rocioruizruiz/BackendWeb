@@ -46,5 +46,46 @@ const getLocationById = async (context: any) => {
   }
 };
 
-export { getLocations, getLocationById }
+const deleteLocationById = async (context: any) => {
+    let id: string = context.params.id;
+    const location = await locations.deleteOne({id: Number(id)});
+  
+    if (location === 1) {
+      context.response.body = {
+        success: true,
+        data: "location Deleted",
+      };
+    } else {
+      context.response.body = {
+        success: false,
+        data: "No location found for given ID",
+      };
+    }
+};
+
+const addLocation = async (context: any) => {
+    console.log("post location");
+    if (!context.request.hasBody) {
+        context.response.body = {
+            success: false,
+            data: "Couldn't add location",
+          };
+    }
+    const body = context.request.body();
+    let char: Partial<LocationSchema> | undefined;
+    if (body.type === "json") {
+        char = await body.value;
+    }
+    if (char) {
+        const object_id = await locations.insertOne(char);
+        console.log(object_id);
+        context.response.status = 200;
+        context.response.body = char;
+        context.response.type = "json";
+        return;
+    } 
+    context.response.status = 400;
+};
+
+export { getLocations, getLocationById, deleteLocationById, addLocation }
 
