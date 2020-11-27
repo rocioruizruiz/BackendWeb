@@ -1,0 +1,5 @@
+.deno_plugins
+./data
+.env
+.DS_Store
+.vscode/*
