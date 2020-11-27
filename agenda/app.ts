@@ -1,5 +1,5 @@
 import { Application, Router, applyGraphQL } from "./config/deps.ts"
-import type { RouterContext , IContext} from "./config/deps.ts"
+import type { IContext} from "./config/deps.ts"
 import db from "./config/db.ts"
 import { types } from "./schema/schema.ts"
 import { resolvers } from "./resolver/task.ts"

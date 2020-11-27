@@ -1,7 +1,6 @@
 import { ITask, TaskSchema } from "../types/types.ts"
 import { Database } from "../config/deps.ts"
 import type {IContext} from "../config/deps.ts"
-import { delay } from "https://deno.land/std@0.69.0/async/delay.ts";
 export const resolvers = {
   Query: {
     getTask: async (
@@ -37,9 +36,6 @@ export const resolvers = {
       return allTasks.filter((t) => filterByEndDate(t, pedido));
     },
     getTasks: async (parent: any, args: any, ctx: IContext, info: any) => {
-      //console.log("Holi");
-      //console.log(ctx.state);
-      //console.log(ctx.state.db);
       const db: Database = ctx.state.db;
       const tasks = db.collection<TaskSchema>("TaskCollection");
       return await tasks.find({}).limit(5);
@@ -132,8 +128,5 @@ const filterByEndDate = (t:TaskSchema, pedido:string[]) => {
     (fecha[2] == pedido[2] && fecha[1] < pedido[1]) ||
     (fecha[2] == pedido[2] && fecha[1] <= pedido[1] && fecha[0] <= pedido[0]));
 }
-/*
-  type Mutation {
-    startTask(_id: ObjectID): ResolveType!
-*/
+
 
