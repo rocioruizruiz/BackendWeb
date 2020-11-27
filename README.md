@@ -1,3 +1,3 @@
 # BackendWeb
 
-STACK: typescript, deno, oak, graphql
+STACK: typescript, deno, oak, graphql, mongo DB
