@@ -10,11 +10,15 @@ import { Query } from "./resolvers/Query.ts";
 import { Mutation } from "./resolvers/Mutation.ts";
 import { UserSchema } from "./mongo/schema.ts";
 import { Post } from "./resolvers/Post.ts";
+import { Comment } from "./resolvers/Comment.ts"
+import { User } from "./resolvers/User.ts"
 
 const resolvers = {
   Query,
   Mutation,
-  Post
+  Post,
+  Comment,
+  User,
 }
 
 try {
@@ -49,52 +53,40 @@ try {
           .findOne({ token });
         if (user) {
           ctx.state.user = user;
-          if (value.query.includes("getPosts")) {
+          if (
+            value.query.includes("getPosts") ||
+            value.query.includes("getUsers")
+          ) {
             await next();
+          } else if (
+            user.rol.includes("ADMIN") &&
+            (value.query.includes("createUser") ||
+              value.query.includes("deleteUser"))
+          ) {
+            await next();
+          } else if (
+            user.rol.includes("AUTHOR") &&
+            (value.query.includes("createPost") ||
+              value.query.includes("deletePost"))
+          ) {
+            await next();
+          } else if (
+            user.rol.includes("EDITOR") &&
+            (value.query.includes("deletePost") ||
+              value.query.includes("deleteComment"))
+          ) {
+            await next();
+          } else if (
+            user.rol.includes("USER") &&
+            (value.query.includes("addComment") ||
+              value.query.includes("deleteComment"))
+          ) {
+            await next();
+          } else {
+            ctx.response.status = 401;
+            ctx.response.body = { error: "Authentication Error" };
           }
-
-          if (user.rol.includes("ADMIN")) {
-            if (value.query.includes("createUser") ||
-                value.query.includes("deleteUser")) {
-              await next();
-            } else {      
-              ctx.response.status = 401;
-              ctx.response.body = { error: "Authentication Error" };
-            }
-            
-          } else if (user.rol.includes("AUTHOR")) {
-            if (
-              value.query.includes("createPost") ||
-              value.query.includes("deletePost")
-            ) {
-              await next();
-            } else {
-              ctx.response.status = 401;
-              ctx.response.body = { error: "Authentication Error" };
-            }
-          } else if (user.rol.includes("EDITOR")) {
-            if (
-              value.query.includes("deletePost") ||
-              value.query.includes("deleteComment")
-            ) {
-              await next();
-            } else {
-              ctx.response.status = 401;
-              ctx.response.body = { error: "Authentication Error" };
-            }
-          } else if (user.rol.includes("USER")) {
-            if (
-              value.query.includes("addComment") ||
-              value.query.includes("deleteComment")
-            ) {
-              await next();
-            } else {
-              ctx.response.status = 401;
-              ctx.response.body = { error: "Authentication Error" };
-            }
-          }
-
-        } else {
+        }else {
           ctx.response.status = 401;
           ctx.response.body = { error: "Authentication Error" };
         }
@@ -115,8 +107,6 @@ try {
       };
     },
   });
-
-  
 
   app.use(GraphQLService.routes(), GraphQLService.allowedMethods());
 

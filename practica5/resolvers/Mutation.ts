@@ -40,6 +40,9 @@ const Mutation = {
       const postsCollection: Collection<PostSchema> = db.collection<PostSchema>(
         "PostCollection"
       );
+      const usersCollection: Collection<UserSchema> = db.collection<UserSchema>(
+        "UserCollection"
+      );
 
       console.log(`id: ${args.post.id}`); /*********************************+*/
       const found = await postsCollection.findOne({ id: args.post.id });
@@ -47,6 +50,8 @@ const Mutation = {
 
       const post = { ...args.post, author: ctx.user.email };
       await postsCollection.insertOne(post);
+      
+
       return true;
     } catch (e) {
       throw new GQLError(e);

@@ -1,26 +1,29 @@
 import { gql } from "https://deno.land/x/oak_graphql@0.6.2/mod.ts";
+import { IComment} from "../types.ts"
 
-// interface IRol = {
-//   rol: "ADMIN" || "AUTHOR" || "EDITOR" || "USER"
-// }
-
+console.log("ayy!!!!!!!!!!!")
 const Schema = gql`
   type Post {
     id: String!
     titulo: String!
     cuerpo: String!
     author: User!
-    comments: [String!]!
+    comments: [Comment]
   }
 
   type User {
     name: String!
     email: String!
+    password: String!
     token: String
     rol: [String!]!
+    posts: [Post!]
   }
 
-  
+  type Comment {
+    author: User!
+    texto: String!
+  }
 
   input PostInput {
     id: String!
@@ -44,7 +47,7 @@ const Schema = gql`
     deletePost(id: String!): Boolean!
     addComment(id: String!, texto: String!): Boolean!
     deleteComment(id: String! author: String): Boolean!
-    # startTask(id: String!): Boolean!
+
     createUser(
       email: String!
       name: String

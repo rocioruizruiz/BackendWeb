@@ -10,19 +10,20 @@ interface IUser {
   email: string;
 }
 
-const Post= {
+const Comment = {
   author: async (
-    parent: { author: string },
+      parent: { author: string },
     args: any,
     ctx: IContext
   ): Promise<IUser | null> => {
     const db: Database = ctx.db;
     const UsersCollection = db.collection<UserSchema>("UserCollection");
-      const user: any = await UsersCollection.findOne({ email: parent.author });
-      console.log(parent.author, "    ", user.email);
+    const user: any = await UsersCollection.findOne({
+      email: parent.author,
+    });
+    console.log(parent.author, "    ", user.email);
     return user;
   },
-
 };
-  
-export { Post };
+
+export { Comment };

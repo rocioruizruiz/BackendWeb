@@ -17,6 +17,6 @@ export interface UserSchema{
 }
 
 interface IComment {
-  texto: string;
   author: string;
+  texto: string;
 }
