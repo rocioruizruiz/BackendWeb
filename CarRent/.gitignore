@@ -1,0 +1,7 @@
+.env
+.deno_plugins
+.vscode
+*/dist/*
+.DS_Store
+dist
+*/dist/*
